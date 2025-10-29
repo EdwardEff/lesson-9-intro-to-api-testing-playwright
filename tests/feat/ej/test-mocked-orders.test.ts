@@ -15,7 +15,6 @@ test.describe('Order API basic tests', () => {
       'Content-Type': 'application/json',
     }
 
-
     const requestBody = {
       status: 'OPEN',
       courierId: 0,
