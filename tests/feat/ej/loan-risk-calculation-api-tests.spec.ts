@@ -1,35 +1,33 @@
-import { StatusCodes } from 'http-status-codes';
-import { test, expect, type APIRequestContext } from '@playwright/test';
+import { StatusCodes } from 'http-status-codes'
+import { test, expect, type APIRequestContext } from '@playwright/test'
 
-
-const LOAN_DECISION_URL =
-  'https://backend.tallinn-learning.ee/api/loan-calc/decision';
+const LOAN_DECISION_URL = 'https://backend.tallinn-learning.ee/api/loan-calc/decision'
 
 type LoanRequest = {
-  income: number;
-  debt: number;
-  age: number;
-  employed: boolean;
-  loanAmount: number;
-  loanPeriod: number;
-};
+  income: number
+  debt: number
+  age: number
+  employed: boolean
+  loanAmount: number
+  loanPeriod: number
+}
 
 type LoanDecision = {
-  riskScore: number;
-  riskLevel: string;
-  riskPeriods: number[];
-  applicationId: string;
-  riskDecision: string;
-};
+  riskScore: number
+  riskLevel: string
+  riskPeriods: number[]
+  applicationId: string
+  riskDecision: string
+}
 
 type LoanExample = {
-  title: string;
-  request: LoanRequest;
-  expectedStatus: number;
-  expectedDecision: 'positive' | 'negative';
-  expectedLevel: string;
-  expectedPeriods: number[];
-};
+  title: string
+  request: LoanRequest
+  expectedStatus: number
+  expectedDecision: 'positive' | 'negative'
+  expectedLevel: string
+  expectedPeriods: number[]
+}
 
 const examples: LoanExample[] = [
   {
@@ -77,8 +75,7 @@ const examples: LoanExample[] = [
     expectedLevel: 'Medium Risk',
     expectedPeriods: [6, 9, 12],
   },
-];
-
+]
 
 async function checkExample(
   example: LoanExample,
@@ -86,30 +83,30 @@ async function checkExample(
 ): Promise<void> {
   const response = await requestFixture.post(LOAN_DECISION_URL, {
     data: example.request,
-  });
+  })
 
-  expect(response.status()).toBe(example.expectedStatus);
+  expect(response.status()).toBe(example.expectedStatus)
 
-  const body: LoanDecision = await response.json();
-  console.log('scenario:', example.title);
-  console.log('request:', example.request);
-  console.log('response:', body);
+  const body: LoanDecision = await response.json()
+  console.log('scenario:', example.title)
+  console.log('request:', example.request)
+  console.log('response:', body)
 
-  expect(body).toHaveProperty('riskDecision');
-  expect(body).toHaveProperty('riskLevel');
-  expect(body).toHaveProperty('riskScore');
-  expect(Array.isArray(body.riskPeriods)).toBe(true);
+  expect(body).toHaveProperty('riskDecision')
+  expect(body).toHaveProperty('riskLevel')
+  expect(body).toHaveProperty('riskScore')
+  expect(Array.isArray(body.riskPeriods)).toBe(true)
 
-  expect.soft(body.riskDecision).toBe(example.expectedDecision);
-  expect.soft(body.riskLevel).toBe(example.expectedLevel);
-  expect.soft(body.riskPeriods).toEqual(example.expectedPeriods);
+  expect.soft(body.riskDecision).toBe(example.expectedDecision)
+  expect.soft(body.riskLevel).toBe(example.expectedLevel)
+  expect.soft(body.riskPeriods).toEqual(example.expectedPeriods)
 
-  expect.soft(body.riskScore).toBeGreaterThanOrEqual(0);
+  expect.soft(body.riskScore).toBeGreaterThanOrEqual(0)
 }
 
 // Тут воспользовался помощь чата тк не помню и не понял как активировать генерацию тестов
 examples.forEach((example, index) => {
   test(`loan decision case ${index + 1}: ${example.title}`, async ({ request }) => {
-    await checkExample(example, request);
-  });
-});
+    await checkExample(example, request)
+  })
+})
