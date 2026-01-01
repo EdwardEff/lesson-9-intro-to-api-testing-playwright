@@ -1,4 +1,6 @@
 import { defineConfig } from '@playwright/test'
+import * as dotenv from 'dotenv'
+dotenv.config()
 
 export default defineConfig({
   testDir: './tests',
@@ -12,8 +14,9 @@ export default defineConfig({
   reporter: 'html',
   use: {
     trace: 'on-first-retry',
+    baseURL: 'https://backend.tallinn-learning.ee',
   },
-
+ 
   projects: [
     {
       name: 'API tests',
