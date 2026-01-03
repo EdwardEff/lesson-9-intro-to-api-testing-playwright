@@ -67,7 +67,6 @@ test('Auth and delete order by id without api client', async ({ request }) => {
   })
   expect(deleteOrder.status()).toBe(StatusCodes.OK)
 
-
   const getAfterDelete = await request.get(`${BASE_URL}/orders/${created.id}`, {
     headers: { Authorization: `Bearer ${jwt}` },
   })
