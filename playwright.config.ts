@@ -16,7 +16,7 @@ export default defineConfig({
     trace: 'on-first-retry',
     baseURL: 'https://backend.tallinn-learning.ee',
   },
- 
+
   projects: [
     {
       name: 'API tests',
