@@ -25,14 +25,12 @@ test('Auth and create order without api client', async ({ request }) => {
 })
 
 test('Auth and get orders without api client', async ({ request }) => {
-  // login
   const authResponse = await request.post(`${BASE_URL}/login/student`, {
     data: LoginDTO.createLoginWithCorrectData(),
   })
   expect(authResponse.status()).toBe(StatusCodes.OK)
   const jwt = await authResponse.text()
 
-  // create first
   const createOrder = await request.post(`${BASE_URL}/orders`, {
     headers: { Authorization: `Bearer ${jwt}` },
     data: OrderDTO.createOrderWithRandomData(),
@@ -40,7 +38,6 @@ test('Auth and get orders without api client', async ({ request }) => {
   expect(createOrder.status()).toBe(StatusCodes.OK)
   const created = await createOrder.json()
 
-  // get by id
   const getOrderId = await request.get(`${BASE_URL}/orders/${created.id}`, {
     headers: { Authorization: `Bearer ${jwt}` },
   })
@@ -51,14 +48,12 @@ test('Auth and get orders without api client', async ({ request }) => {
 })
 
 test('Auth and delete order by id without api client', async ({ request }) => {
-  // login
   const authResponse = await request.post(`${BASE_URL}/login/student`, {
     data: LoginDTO.createLoginWithCorrectData(),
   })
   expect(authResponse.status()).toBe(StatusCodes.OK)
   const jwt = await authResponse.text()
 
-  // create
   const createOrder = await request.post(`${BASE_URL}/orders`, {
     headers: { Authorization: `Bearer ${jwt}` },
     data: OrderDTO.createOrderWithRandomData(),
@@ -67,13 +62,12 @@ test('Auth and delete order by id without api client', async ({ request }) => {
   const created = await createOrder.json()
   expect(created.id).toBeGreaterThan(0)
 
-  // delete
   const deleteOrder = await request.delete(`${BASE_URL}/orders/${created.id}`, {
     headers: { Authorization: `Bearer ${jwt}` },
   })
   expect(deleteOrder.status()).toBe(StatusCodes.OK)
 
-  // check after delete
+
   const getAfterDelete = await request.get(`${BASE_URL}/orders/${created.id}`, {
     headers: { Authorization: `Bearer ${jwt}` },
   })
